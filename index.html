@@ -1,0 +1,266 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Qwik Service – Book, Check & Manage Your Vehicle Service</title>
+<meta name="description" content="Qwik Service – Fast. Friendly. Reliable. Talk to Quinn, our AI voice assistant, to book, check, reschedule or cancel your vehicle service appointment.">
+<style>
+  :root{
+    --red:#d7141a; --red-dark:#a50f14; --ink:#14161a; --muted:#5b6170;
+    --bg:#f6f7f9; --card:#ffffff; --line:#e3e6ec; --yellow:#ffc928;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;font-family:"Segoe UI",Roboto,Helvetica,Arial,sans-serif;color:var(--ink);background:var(--bg);line-height:1.55}
+  a{color:var(--red)}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 20px}
+
+  /* Header */
+  header{background:#111;color:#fff;position:sticky;top:0;z-index:20}
+  header .wrap{display:flex;align-items:center;justify-content:space-between;height:64px;gap:16px}
+  .logo{font-weight:900;font-style:italic;letter-spacing:.5px;font-size:24px;color:#fff;text-decoration:none}
+  .logo span{color:var(--red)}
+  nav a{color:#ddd;text-decoration:none;margin-left:22px;font-size:15px}
+  nav a:hover{color:#fff}
+  @media(max-width:760px){nav{display:none}}
+
+  /* Hero */
+  .hero{background:linear-gradient(120deg,#111 0%,#2a0608 55%,var(--red) 140%);color:#fff;padding:72px 0 64px}
+  .hero .wrap{display:grid;grid-template-columns:1.2fr .8fr;gap:40px;align-items:center}
+  @media(max-width:900px){.hero .wrap{grid-template-columns:1fr}}
+  .tag{display:inline-block;background:var(--yellow);color:#111;font-weight:700;font-size:13px;padding:4px 10px;border-radius:4px;letter-spacing:.4px}
+  .hero h1{font-size:44px;line-height:1.1;margin:16px 0 12px}
+  .hero p.lead{font-size:18px;color:#e9e9ec;max-width:560px}
+  .cta-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:26px}
+  .btn{display:inline-flex;align-items:center;gap:10px;border:0;cursor:pointer;font-weight:700;font-size:16px;padding:14px 22px;border-radius:999px;text-decoration:none}
+  .btn-red{background:var(--red);color:#fff;box-shadow:0 6px 18px rgba(215,20,26,.35)}
+  .btn-red:hover{background:var(--red-dark)}
+  .btn-ghost{background:transparent;color:#fff;border:2px solid rgba(255,255,255,.6)}
+  .btn-ghost:hover{border-color:#fff}
+
+  .call-card{background:#fff;color:var(--ink);border-radius:16px;padding:26px;box-shadow:0 20px 50px rgba(0,0,0,.35)}
+  .call-card h2{margin:0 0 6px;font-size:22px}
+  .call-card p{margin:0 0 16px;color:var(--muted);font-size:15px}
+  .lang{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 0}
+  .pill{font-size:12px;background:#f1f2f5;border:1px solid var(--line);border-radius:999px;padding:4px 10px}
+  .steps{margin:0;padding-left:18px;color:var(--muted);font-size:14px}
+
+  /* Sections */
+  section{padding:64px 0}
+  h2.section-title{font-size:30px;margin:0 0 8px}
+  p.section-sub{color:var(--muted);margin:0 0 30px}
+  .grid{display:grid;gap:18px}
+  .g3{grid-template-columns:repeat(3,1fr)} .g2{grid-template-columns:repeat(2,1fr)}
+  @media(max-width:900px){.g3,.g2{grid-template-columns:1fr}}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:22px}
+  .card h3{margin:0 0 8px;font-size:18px}
+  .card ul{margin:0;padding-left:18px;color:var(--muted);font-size:15px}
+  .icon{width:42px;height:42px;border-radius:10px;background:#fde8e9;color:var(--red);display:flex;align-items:center;justify-content:center;font-weight:900;margin-bottom:12px}
+
+  .how{counter-reset:s}
+  .how .card{position:relative;padding-top:30px}
+  .how .card::before{counter-increment:s;content:counter(s);position:absolute;top:-14px;left:20px;background:var(--red);color:#fff;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800}
+
+  .inspect{background:#0f2f5c;color:#fff}
+  .inspect .card{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.15);color:#fff}
+  .inspect .card ul,.inspect p.section-sub{color:#cfd8e6}
+
+  details{background:#fff;border:1px solid var(--line);border-radius:12px;padding:16px 18px;margin-bottom:10px}
+  summary{cursor:pointer;font-weight:700}
+  details p{color:var(--muted);margin:10px 0 0}
+
+  .tester{background:#fffbea;border:1px dashed #e0b400;border-radius:14px;padding:22px}
+  .tester code{background:#fff;border:1px solid #eadb9a;border-radius:6px;padding:2px 6px}
+  table{border-collapse:collapse;width:100%;font-size:15px}
+  td,th{border-bottom:1px solid #efe3a8;padding:8px 6px;text-align:left}
+
+  footer{background:#111;color:#aaa;padding:28px 0;font-size:14px}
+  footer .wrap{display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px}
+  .note{font-size:13px;color:var(--muted)}
+
+  /* xApp PIN panel (sits bottom-left so the Click-to-Call widget stays usable) */
+  .xapp-panel{position:fixed;left:20px;bottom:20px;width:380px;max-width:calc(100vw - 40px);height:560px;max-height:calc(100vh - 100px);background:#fff;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.45);z-index:50;display:none;flex-direction:column;overflow:hidden}
+  .xapp-panel.open{display:flex}
+  .xapp-head{background:#111;color:#fff;padding:12px 16px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+  .xapp-head strong{font-size:15px}
+  .xapp-head a{color:#ffd23f;font-size:13px}
+  .xapp-head button{background:transparent;border:0;color:#fff;font-size:22px;cursor:pointer;line-height:1}
+  .xapp-hint{font-size:13px;color:var(--muted);padding:10px 16px;border-bottom:1px solid var(--line)}
+  .xapp-panel iframe{flex:1;border:0;width:100%}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <a class="logo" href="#">QWIK <span>SERVICE</span></a>
+    <nav>
+      <a href="#services">Services</a>
+      <a href="#how">How booking works</a>
+      <a href="#inspection">Safety inspection</a>
+      <a href="#faq">FAQ</a>
+      <a href="#talk">Talk to Quinn</a>
+    </nav>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="wrap">
+    <div>
+      <span class="tag">FAST. FRIENDLY. RELIABLE.</span>
+      <h1>Your car service, booked in one quick call.</h1>
+      <p class="lead">Meet <strong>Quinn</strong>, the Qwik Service AI voice assistant. Book, check, reschedule or cancel a service appointment, or schedule your annual Nexora safety inspection, any time, 24/7.</p>
+      <div class="cta-row">
+        <a class="btn btn-red" href="#talk">📞 Call Quinn now</a>
+        <a class="btn btn-ghost" href="#services">See the service menu</a>
+      </div>
+    </div>
+
+    <div class="call-card" id="talk">
+      <h2>Talk to Quinn in your browser</h2>
+      <p>Press the <strong>call button in the bottom-right corner</strong> and allow microphone access. If you'd rather type, open the <strong>chat</strong> instead.</p>
+      <ol class="steps">
+        <li>Say what you need, e.g. "I want to book an oil change".</li>
+        <li>Quinn verifies you with your <strong>license plate</strong>, <strong>postal code</strong> and the <strong>phone number</strong> on file.</li>
+        <li>To cancel, Quinn sends a secure page with <em>Keep</em> / <em>Cancel</em> buttons. On a call, Quinn reads you a 6-character <strong>PIN</strong>: press <strong>Open my appointment page</strong> below and enter it (the call keeps running). In the chat the page opens automatically.</li>
+      </ol>
+      <div class="lang"><span class="pill">🇬🇧 English</span><span class="pill">🇻🇳 Tiếng Việt</span><span class="pill">Say "Vietnamese, please" or just speak Vietnamese</span></div>
+      <div class="cta-row" style="margin-top:18px">
+        <button class="btn btn-red" id="openXapp" type="button">🔑 Open my appointment page</button>
+        <button class="btn btn-red" id="openChat" type="button" style="background:#111">💬 Prefer to chat? Open chat</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section id="services">
+  <div class="wrap">
+    <h2 class="section-title">Service menu</h2>
+    <p class="section-sub">Not sure what your vehicle needs? Book a general inspection or diagnostic visit and describe the symptoms to the technician.</p>
+    <div class="grid g3">
+      <div class="card"><div class="icon">🔧</div><h3>Repair &amp; Diagnostics</h3><ul><li>Diagnostic scan</li><li>Dashboard lights</li><li>Engine tune-up</li><li>A/C &amp; heating</li><li>Shocks &amp; struts</li><li>Exhaust system</li></ul></div>
+      <div class="card"><div class="icon">🛢️</div><h3>Oil Change Services</h3><ul><li>Standard oil change</li><li>Synthetic oil change</li><li>High-mileage oil change</li></ul></div>
+      <div class="card"><div class="icon">🛞</div><h3>Tire Services</h3><ul><li>Tire rotation &amp; balancing</li><li>Flat tire repair</li><li>Tire installation</li><li>Wheel alignment</li></ul></div>
+      <div class="card"><div class="icon">🛑</div><h3>Brake Services</h3><ul><li>Brake inspection</li><li>Standard brake service</li><li>Premium brake service</li></ul></div>
+      <div class="card"><div class="icon">🔋</div><h3>Battery &amp; Charging</h3><ul><li>Battery check</li><li>Battery replacement</li><li>Charging system evaluation</li></ul></div>
+      <div class="card"><div class="icon">🧰</div><h3>Maintenance Basics</h3><ul><li>Filter replacement</li><li>Windshield wipers</li><li>Headlights</li><li>Courtesy vehicle inspection</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW -->
+<section id="how" style="background:#fff">
+  <div class="wrap">
+    <h2 class="section-title">How booking works</h2>
+    <p class="section-sub">Quinn guides you through the same five steps, all by voice.</p>
+    <div class="grid g3 how" style="grid-template-columns:repeat(5,1fr)">
+      <div class="card"><h3>Location</h3><p class="note">Choose a service center.</p></div>
+      <div class="card"><h3>Vehicle</h3><p class="note">Make, model and year.</p></div>
+      <div class="card"><h3>Services</h3><p class="note">Pick from the menu.</p></div>
+      <div class="card"><h3>Date &amp; time</h3><p class="note">From live availability.</p></div>
+      <div class="card"><h3>Confirm</h3><p class="note">Get your appointment ID.</p></div>
+    </div>
+    <p class="note" style="margin-top:16px">Tip: arrive 10–15 minutes early, bring your keys and contact details, and ask about shuttle, waiting area or loaner options.</p>
+  </div>
+</section>
+
+<!-- INSPECTION -->
+<section id="inspection" class="inspect">
+  <div class="wrap">
+    <h2 class="section-title">Nexora annual vehicle safety inspection</h2>
+    <p class="section-sub">Most vehicles in Nexora must pass a safety inspection every 12 months. Quinn books you only at <strong>certified</strong> inspection centers.</p>
+    <div class="grid g3">
+      <div class="card"><h3>How it works</h3><ul><li>Visit an official inspection station</li><li>Old sticker is removed</li><li>Certified inspector checks safety items</li><li>Pass: a new windshield sticker is issued</li></ul></div>
+      <div class="card"><h3>What is inspected</h3><ul><li>Brakes &amp; parking brake</li><li>Lights, signals &amp; horn</li><li>Steering, suspension, tires &amp; wheels</li><li>Mirrors, glass, wipers, seat belts</li><li>Exhaust, fuel &amp; emissions equipment</li></ul></div>
+      <div class="card"><h3>If you don't pass</h3><ul><li>A rejection sticker or notice may be issued</li><li>Repair the listed defects</li><li>Return for reinspection within 15 days</li></ul></div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq">
+  <div class="wrap">
+    <h2 class="section-title">Frequently asked questions</h2>
+    <p class="section-sub">You can also simply ask Quinn. No verification needed for general questions.</p>
+    <details><summary>Can I change my service center location?</summary><p>Yes. You can usually change locations before final confirmation, though you may need to reselect available services or times.</p></details>
+    <details><summary>Will I get a confirmation email or SMS?</summary><p>Yes. A confirmation is typically sent by email, and optional text reminders may be available.</p></details>
+    <details><summary>What time should I arrive for my service?</summary><p>Arrive about 10–15 minutes early so check-in is quick and easy.</p></details>
+    <details><summary>Are loaner vehicles available during service?</summary><p>Loaner availability varies by location and service type. Check with your service center when booking.</p></details>
+    <details><summary>Can I book if I am not sure what my vehicle needs?</summary><p>Yes. Choose a general inspection or diagnostic visit and discuss the symptoms with the technician.</p></details>
+  </div>
+</section>
+
+<!-- TESTER INFO -->
+<section style="padding-top:0">
+  <div class="wrap">
+    <div class="tester">
+      <h3 style="margin-top:0">For evaluators: test identity</h3>
+      <p class="note" style="margin-top:0">Click-to-Call has no real caller ID, so Quinn will ask for the phone number on file.</p>
+      <table>
+        <tr><th>Phone number</th><th>License plate</th><th>Postal code</th></tr>
+        <tr><td><code>+49 30 1234567</code></td><td><code>BER-1024</code></td><td><code>94105</code></td></tr>
+        <tr><td><code>+1 415 555 0102</code></td><td><code>MUC-7788</code></td><td><code>10001</code></td></tr>
+        <tr><td><code>+61 412 345 678</code></td><td><code>HAM-9001</code></td><td><code>60601</code></td></tr>
+      </table>
+      <p class="note">Things to try: book a maintenance appointment at Berlin Auto Center · book a Nexora safety inspection · check appointment status · reschedule · cancel (secure Keep/Cancel page) · ask about loaner cars · switch to Vietnamese · ask for a human advisor.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div>© Qwik Service (capstone demo). Fast. Friendly. Reliable.</div>
+    <div>Powered by Cognigy.AI AI Agents · Voice Gateway</div>
+  </div>
+</footer>
+
+<!-- xApp PIN panel: Quinn reads the PIN on a voice call; the caller enters it here -->
+<div class="xapp-panel" id="xappPanel" role="dialog" aria-label="Your appointment page">
+  <div class="xapp-head">
+    <strong>🔑 Your appointment page</strong>
+    <span><a href="https://cognigy-static-jp1.nicecxone.com/" target="_blank" rel="noopener">Open in new tab</a></span>
+    <button type="button" id="closeXapp" aria-label="Close">×</button>
+  </div>
+  <div class="xapp-hint">Enter the PIN Quinn just read to you (valid for 5 minutes), then tap <strong>Keep</strong> or <strong>Cancel</strong>.</div>
+  <iframe id="xappFrame" title="Qwik Service appointment page" src="about:blank"></iframe>
+</div>
+
+<!-- Cognigy Click-to-Call (Voice Gateway endpoint "Qwik Voice") -->
+<script src="https://github.com/Cognigy/click-to-call-widget/releases/latest/download/webRTCWidget.js"></script>
+<script>
+  addEventListener("load", function () {
+    if (window.initWebRTCWidget) {
+      window.initWebRTCWidget("https://cognigy-endpoint-jp1.nicecxone.com/ed42bfeb83030e1b3a2c3ce90605bcf57a5729d232585bfda019deaf0f4552ae");
+    }
+  });
+</script>
+
+<!-- Cognigy Webchat v3 (endpoint "Qwik Webchat"): text option; xApp opens as an overlay inside the chat -->
+<script src="https://github.com/Cognigy/Webchat/releases/latest/download/webchat.js"></script>
+<script>
+  var webchatEndpoint = "https://cognigy-endpoint-jp1.nicecxone.com/d913152ca22649ce4d877afd01bc8e561648382da8de8bbfc68188a1da08729b";
+  var chat = null;
+  function startChat() {
+    if (chat) { try { chat.open(); } catch (e) {} return; }
+    if (!window.initWebchat) return;
+    window.initWebchat(webchatEndpoint, { settings: { startBehavior: { startBehavior: "none" } } })
+      .then(function (wc) { chat = wc; try { wc.open(); } catch (e) {} });
+  }
+  document.getElementById("openChat").addEventListener("click", startChat);
+
+  // xApp PIN page (fresh load each time so a new PIN can be entered)
+  var xappPinPage = "https://cognigy-static-jp1.nicecxone.com/";
+  document.getElementById("openXapp").addEventListener("click", function () {
+    document.getElementById("xappFrame").src = xappPinPage + "?t=" + Date.now();
+    document.getElementById("xappPanel").classList.add("open");
+  });
+  document.getElementById("closeXapp").addEventListener("click", function () {
+    document.getElementById("xappPanel").classList.remove("open");
+    document.getElementById("xappFrame").src = "about:blank";
+  });
+</script>
+</body>
+</html>
